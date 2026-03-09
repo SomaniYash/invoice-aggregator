@@ -11,25 +11,27 @@ import pandas as pd
 def pdf_to_xlsx(pdf_file):
     import pdfplumber
     wb = openpyxl.Workbook()
-    wb.remove(wb.active)
-
+    ws = wb.active
+    ws.title = "Data"
+    
+    current_row = 1
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page_num, page in enumerate(pdf.pages, 1):
             tables = page.extract_tables()
+            
             if tables:
-                for t_idx, table in enumerate(tables):
-                    ws = wb.create_sheet(title=f"P{page_num}_T{t_idx+1}"[:31])
+                for table in tables:
                     for row in table:
                         ws.append([c if c is not None else "" for c in row])
+                        current_row += 1
             else:
                 text = page.extract_text() or ""
-                ws = wb.create_sheet(title=f"Page {page_num}"[:31])
                 for line in text.split("\n"):
-                    ws.append([line])
-
-    if not wb.sheetnames:
-        wb.create_sheet("Empty")
-
+                    if line.strip():  # Only add non-empty lines
+                        ws.append([line])
+                        current_row += 1
+    
     out = io.BytesIO()
     wb.save(out)
     out.seek(0)
