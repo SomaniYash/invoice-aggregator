@@ -239,10 +239,10 @@ def run_inv_agg(file_a, file_b):
 # STREAMLIT UI
 # ─────────────────────────────────────────────────────────────────────────────
 
-st.set_page_config(page_title="Yash's File Processor", layout="wide", page_icon="📊")
+st.set_page_config(page_title="EFT Summary Processor", layout="wide", page_icon="📊")
 
-st.title("📊 File Processor")
-st.caption("Three tools — drag your file, click run, download the result.")
+st.title("📊 EFT Summary Processor")
+st.caption("Three tools — from uploading the PDF to downloading the final EFT Summary Excel — all in one place.")
 st.markdown("---")
 
 # ── Tool 1: PDF → XLSX ────────────────────────────────────────────────────────
