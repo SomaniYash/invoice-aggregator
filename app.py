@@ -5,41 +5,7 @@ import openpyxl
 import pandas as pd
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 1. PDF → XLSX
-# ─────────────────────────────────────────────────────────────────────────────
-
-def pdf_to_xlsx(pdf_file):
-    import pdfplumber
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Data"
-    
-    current_row = 1
-    
-    with pdfplumber.open(pdf_file) as pdf:
-        for page_num, page in enumerate(pdf.pages, 1):
-            tables = page.extract_tables()
-            
-            if tables:
-                for table in tables:
-                    for row in table:
-                        ws.append([c if c is not None else "" for c in row])
-                        current_row += 1
-            else:
-                text = page.extract_text() or ""
-                for line in text.split("\n"):
-                    if line.strip():  # Only add non-empty lines
-                        ws.append([line])
-                        current_row += 1
-    
-    out = io.BytesIO()
-    wb.save(out)
-    out.seek(0)
-    return out
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 2. Process Tax Cells  (processtaxcells.py — adapted)
+# 1. Process Tax Cells  (processtaxcells.py — adapted)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def process_tax_cells(input_file):
@@ -69,7 +35,7 @@ def process_tax_cells(input_file):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 3. Invoice Aggregation  (inv agg.py — adapted)
+# 2. Invoice Aggregation  (inv agg.py — adapted)
 # ─────────────────────────────────────────────────────────────────────────────
 
 KNOWN_CATEGORIES = {
@@ -245,30 +211,8 @@ st.title("📊 EFT Summary Processor")
 st.caption("Three tools — from uploading the PDF to downloading the final EFT Summary Excel — all in one place.")
 st.markdown("---")
 
-# ── Tool 1: PDF → XLSX ────────────────────────────────────────────────────────
-st.header("1️⃣  PDF  →  Excel")
-st.caption("Extracts all tables (or raw text if no tables found) from a PDF into an .xlsx file.")
 
-pdf_file = st.file_uploader("Drop your PDF here", type=["pdf"], key="pdf")
-if pdf_file:
-    st.success(f"✅  {pdf_file.name} ready")
-    if st.button("Convert to Excel", key="run_pdf"):
-        with st.spinner("Converting…"):
-            try:
-                result = pdf_to_xlsx(pdf_file)
-                out_name = pdf_file.name.rsplit(".", 1)[0] + ".xlsx"
-                st.download_button(
-                    "⬇️  Download Excel", data=result, file_name=out_name,
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    key="dl_pdf"
-                )
-                st.success("Done!")
-            except Exception as e:
-                st.error(f"Error: {e}")
-
-st.markdown("---")
-
-# ── Tool 2: Process Tax Cells ─────────────────────────────────────────────────
+# ── Tool 21: Process Tax Cells ─────────────────────────────────────────────────
 st.header("2️⃣  Process Tax Cells")
 st.caption("Finds cells containing 'TAX', reads the number above, and rewrites them as  `{number} TAX`.")
 
@@ -297,7 +241,7 @@ if tax_file:
 
 st.markdown("---")
 
-# ── Tool 3: Invoice Aggregation ───────────────────────────────────────────────
+# ── Tool 2: Invoice Aggregation ───────────────────────────────────────────────
 st.header("3️⃣  Invoice Aggregation")
 st.caption("Upload File A (transactions) and File B (member database) to produce a consolidated summary.")
 
