@@ -213,7 +213,7 @@ st.markdown("---")
 
 
 # ── Tool 21: Process Tax Cells ─────────────────────────────────────────────────
-st.header("2️⃣  Process Tax Cells")
+st.header("1️⃣  Process Tax Cells")
 st.caption("Finds cells containing 'TAX', reads the number above, and rewrites them as  `{number} TAX`.")
 
 tax_file = st.file_uploader("Drop your Excel file here", type=["xlsx", "xls"], key="tax")
@@ -242,7 +242,7 @@ if tax_file:
 st.markdown("---")
 
 # ── Tool 2: Invoice Aggregation ───────────────────────────────────────────────
-st.header("3️⃣  Invoice Aggregation")
+st.header("2️⃣  Invoice Aggregation")
 st.caption("Upload File A (transactions) and File B (member database) to produce a consolidated summary.")
 
 col1, col2 = st.columns(2)
